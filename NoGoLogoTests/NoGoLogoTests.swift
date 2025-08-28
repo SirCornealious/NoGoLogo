@@ -4,32 +4,27 @@
 //
 //  Created by Jared Maxwell on 8/26/25.
 //
-
 import XCTest
+import CoreData
+@testable import NoGoLogo
 
-final class NoGoLogoTests: XCTestCase {
+class NoGoLogoTests: XCTestCase {
+    var persistenceController: PersistenceController!
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    override func setUp() {
+        super.setUp()
+        persistenceController = PersistenceController(inMemory: true)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    func testSaveAPIKey() {
+        let context = persistenceController.container.viewContext
+        let apiKey = APIKey(context: context)
+        apiKey.key = "test-key"
+        try? context.save()
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        let fetchRequest: NSFetchRequest<APIKey> = APIKey.fetchRequest()
+        let keys = try? context.fetch(fetchRequest)
+        XCTAssertEqual(keys?.count, 1)
+        XCTAssertEqual(keys?.first?.key, "test-key")
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

@@ -1,10 +1,3 @@
-//
-//  NoGoLogoApp.swift
-//  NoGoLogo
-//
-//  Created by Jared Maxwell on 8/26/25.
-//
-
 import SwiftUI
 
 @main
@@ -15,6 +8,8 @@ struct NoGoLogoApp: App {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(LogManager.shared)
         }
+        .defaultSize(width: 600, height: 800)  // Base; dynamic frame in ContentView overrides on content load
     }
 }

@@ -7,35 +7,25 @@
 
 import XCTest
 
-final class NoGoLogoUITests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-
-        // In UI tests it is usually best to stop immediately when a failure occurs.
+class NoGoLogoUITests: XCTestCase {
+    override func setUp() {
+        super.setUp()
         continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        XCUIApplication().launch()
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    @MainActor
-    func testExample() throws {
-        // UI tests must launch the application that they test.
+    func testSettingsView() {
         let app = XCUIApplication()
-        app.launch()
+        let settingsButton = app.buttons["gear"]
+        XCTAssertTrue(settingsButton.exists)
+        settingsButton.tap()
 
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+        let apiKeyField = app.textFields["xAI API Key"]
+        XCTAssertTrue(apiKeyField.exists)
+        apiKeyField.typeText("test-api-key")
 
-    @MainActor
-    func testLaunchPerformance() throws {
-        // This measures how long it takes to launch your application.
-        measure(metrics: [XCTApplicationLaunchMetric()]) {
-            XCUIApplication().launch()
-        }
+        let saveButton = app.buttons["Save API Key"]
+        XCTAssertTrue(saveButton.exists)
+        saveButton.tap()
     }
 }

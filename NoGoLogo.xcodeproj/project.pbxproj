@@ -6,6 +6,20 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		D4456CF92E5E4EAE0039136E /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF82E5E4EAE0039136E /* Item+CoreDataProperties.swift */; };
+		D4456CFA2E5E4EAE0039136E /* APIKey+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF52E5E4EAE0039136E /* APIKey+CoreDataClass.swift */; };
+		D4456CFB2E5E4EAE0039136E /* APIKey+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF62E5E4EAE0039136E /* APIKey+CoreDataProperties.swift */; };
+		D4456CFC2E5E4EAE0039136E /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF72E5E4EAE0039136E /* Item+CoreDataClass.swift */; };
+		D4456CFD2E5E4EAE0039136E /* APIKey+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF52E5E4EAE0039136E /* APIKey+CoreDataClass.swift */; };
+		D4456CFE2E5E4EAE0039136E /* APIKey+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF62E5E4EAE0039136E /* APIKey+CoreDataProperties.swift */; };
+		D4456CFF2E5E4EAE0039136E /* Item+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF72E5E4EAE0039136E /* Item+CoreDataClass.swift */; };
+		D4456D002E5E4EAE0039136E /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4456CF82E5E4EAE0039136E /* Item+CoreDataProperties.swift */; };
+		D4FC98352E5E5B690077D31C /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4FC98342E5E5B690077D31C /* CoreData.framework */; };
+		D4FC98372E5E628C0077D31C /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4FC98362E5E628C0077D31C /* Photos.framework */; };
+		D4FC98392E5E62920077D31C /* PhotosUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4FC98382E5E62920077D31C /* PhotosUI.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D4456CC32E5E33F80039136E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -23,16 +37,47 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D4456CEC2E5E3C9B0039136E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4456CF02E5E3CA70039136E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		D4456CAE2E5E33F70039136E /* NoGoLogo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoGoLogo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4456CC22E5E33F80039136E /* NoGoLogoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoGoLogoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4456CCC2E5E33F90039136E /* NoGoLogoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NoGoLogoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4456CF52E5E4EAE0039136E /* APIKey+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIKey+CoreDataClass.swift"; sourceTree = "<group>"; };
+		D4456CF62E5E4EAE0039136E /* APIKey+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIKey+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D4456CF72E5E4EAE0039136E /* Item+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataClass.swift"; sourceTree = "<group>"; };
+		D4456CF82E5E4EAE0039136E /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		D4FC98342E5E5B690077D31C /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D4FC98362E5E628C0077D31C /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		D4FC98382E5E62920077D31C /* PhotosUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PhotosUI.framework; path = System/Library/Frameworks/PhotosUI.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
 		D4456CD42E5E33F90039136E /* Exceptions for "NoGoLogo" folder in "NoGoLogo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				APIKey.DELETE,
 				Info.plist,
 			);
 			target = D4456CAD2E5E33F70039136E /* NoGoLogo */;
@@ -65,6 +110,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4FC98352E5E5B690077D31C /* CoreData.framework in Frameworks */,
+				D4FC98372E5E628C0077D31C /* Photos.framework in Frameworks */,
+				D4FC98392E5E62920077D31C /* PhotosUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,9 +136,14 @@
 		D4456CA52E5E33F70039136E = {
 			isa = PBXGroup;
 			children = (
+				D4456CF52E5E4EAE0039136E /* APIKey+CoreDataClass.swift */,
+				D4456CF62E5E4EAE0039136E /* APIKey+CoreDataProperties.swift */,
+				D4456CF72E5E4EAE0039136E /* Item+CoreDataClass.swift */,
+				D4456CF82E5E4EAE0039136E /* Item+CoreDataProperties.swift */,
 				D4456CB02E5E33F70039136E /* NoGoLogo */,
 				D4456CC52E5E33F80039136E /* NoGoLogoTests */,
 				D4456CCF2E5E33F90039136E /* NoGoLogoUITests */,
+				D4456CE72E5E3C960039136E /* Frameworks */,
 				D4456CAF2E5E33F70039136E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,6 +156,16 @@
 				D4456CCC2E5E33F90039136E /* NoGoLogoUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D4456CE72E5E3C960039136E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D4FC98382E5E62920077D31C /* PhotosUI.framework */,
+				D4FC98362E5E628C0077D31C /* Photos.framework */,
+				D4FC98342E5E5B690077D31C /* CoreData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -137,6 +200,7 @@
 				D4456CBE2E5E33F80039136E /* Sources */,
 				D4456CBF2E5E33F80039136E /* Frameworks */,
 				D4456CC02E5E33F80039136E /* Resources */,
+				D4456CEC2E5E3C9B0039136E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,6 +224,7 @@
 				D4456CC82E5E33F90039136E /* Sources */,
 				D4456CC92E5E33F90039136E /* Frameworks */,
 				D4456CCA2E5E33F90039136E /* Resources */,
+				D4456CF02E5E3CA70039136E /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -184,7 +249,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					D4456CAD2E5E33F70039136E = {
 						CreatedOnToolsVersion = 16.4;
@@ -208,6 +273,9 @@
 			);
 			mainGroup = D4456CA52E5E33F70039136E;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				D4FC983D2E5F7DB30077D31C /* XCRemoteSwiftPackageReference "generative-ai-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D4456CAF2E5E33F70039136E /* Products */;
 			projectDirPath = "";
@@ -249,6 +317,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4456CF92E5E4EAE0039136E /* Item+CoreDataProperties.swift in Sources */,
+				D4456CFA2E5E4EAE0039136E /* APIKey+CoreDataClass.swift in Sources */,
+				D4456CFB2E5E4EAE0039136E /* APIKey+CoreDataProperties.swift in Sources */,
+				D4456CFC2E5E4EAE0039136E /* Item+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +335,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4456CFD2E5E4EAE0039136E /* APIKey+CoreDataClass.swift in Sources */,
+				D4456CFE2E5E4EAE0039136E /* APIKey+CoreDataProperties.swift in Sources */,
+				D4456CFF2E5E4EAE0039136E /* Item+CoreDataClass.swift in Sources */,
+				D4456D002E5E4EAE0039136E /* Item+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,11 +366,21 @@
 				CODE_SIGN_ENTITLEMENTS = NoGoLogo/NoGoLogo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
+				ENABLE_FILE_ACCESS_PICTURE_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NoGoLogo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NoGoLogo;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -308,16 +394,16 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogo;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.Logo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Debug;
@@ -330,11 +416,21 @@
 				CODE_SIGN_ENTITLEMENTS = NoGoLogo/NoGoLogo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
+				ENABLE_FILE_ACCESS_PICTURE_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_RESOURCE_ACCESS_PHOTO_LIBRARY = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NoGoLogo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NoGoLogo;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.photography";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -348,16 +444,16 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogo;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.Logo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
 			name = Release;
@@ -396,6 +492,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -419,6 +516,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -458,6 +556,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -474,6 +573,7 @@
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
@@ -484,18 +584,19 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.LogoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NoGoLogo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NoGoLogo";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
@@ -507,18 +608,19 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogoTests;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.LogoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NoGoLogo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NoGoLogo";
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
@@ -529,18 +631,19 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogoUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.LogoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = NoGoLogo;
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
@@ -551,18 +654,19 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 77PD39WVT2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = NoGoLogo.NoGoLogoUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = NoGo.LogoUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = NoGoLogo;
 				XROS_DEPLOYMENT_TARGET = 2.5;
 			};
@@ -608,6 +712,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		D4FC983D2E5F7DB30077D31C /* XCRemoteSwiftPackageReference "generative-ai-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/generative-ai-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = D4456CA62E5E33F70039136E /* Project object */;
 }
