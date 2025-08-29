@@ -18,85 +18,110 @@ struct SettingsView: View {
     private var apiKeys: FetchedResults<APIKey>
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 0) {
+            // Header with close button and centered title
             HStack {
-                Text("Settings")
-                    .font(.title)
-                Spacer()
                 Button(action: {
                     dismiss()
                 }) {
-                    Circle()
-                        .fill(Color.red)
-                        .frame(width: 14, height: 14)
-                        .overlay(
-                            Text("×")
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(.white)
-                        )
+                    Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.secondary)
+                        .frame(width: 20, height: 20)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
                 }
                 .buttonStyle(PlainButtonStyle())
+                
+                Spacer()
+                
+                Text("Settings")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                // Invisible spacer to balance the close button
+                Color.clear
+                    .frame(width: 20, height: 20)
             }
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
             
-            HStack {
-                TextField("xAI API Key", text: $xaiKey)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button("Settings") {
-                    showingXAISettings = true
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-            }
-            .padding(.horizontal)
+            Divider()
+                .padding(.vertical, 10)
             
-            HStack {
-                TextField("OpenAI API Key", text: $openaiKey)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button("Settings") {
-                    showingOpenAISettings = true
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-            }
-            .padding(.horizontal)
-            
-            HStack {
-                TextField("Gemini API Key", text: $geminiKey)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                Button("Settings") {
-                    showingGeminiSettings = true
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-            }
-            .padding(.horizontal)
-            
-            Button(action: {
-                saveAPIKeys()
-                dismiss()
-            }) {
-                Text("Save API Keys")
+            ScrollView {
+                VStack(spacing: 20) {
+                    // API Key Inputs
+                    VStack(spacing: 15) {
+                        HStack {
+                            TextField("xAI API Key", text: $xaiKey)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            Button("Settings") {
+                                showingXAISettings = true
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.small)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        HStack {
+                            TextField("OpenAI API Key", text: $openaiKey)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            Button("Settings") {
+                                showingOpenAISettings = true
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.small)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        HStack {
+                            TextField("Gemini API Key", text: $geminiKey)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                            Button("Settings") {
+                                showingGeminiSettings = true
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.small)
+                        }
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    // Save Button
+                    Button(action: {
+                        saveAPIKeys()
+                        dismiss()
+                    }) {
+                        Text("Save API Keys")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(xaiKey.isEmpty && openaiKey.isEmpty && geminiKey.isEmpty)
+                    .padding(.horizontal, 20)
+                    
+                    // View Logs Button
+                    Button("View Logs") {
+                        showLogs = true
+                    }
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .background(Color.blue)
+                    .background(Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(10)
+                    .padding(.horizontal, 20)
+                    
+                    Spacer(minLength: 20)
+                }
+                .padding(.vertical, 20)
             }
-            .disabled(xaiKey.isEmpty && openaiKey.isEmpty && geminiKey.isEmpty)
-            
-            Button("View Logs") {
-                showLogs = true
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-            
-            Spacer()
         }
-        .padding()
-        .frame(minWidth: 300, minHeight: 250)
+        .frame(minWidth: 500, minHeight: 400)
+        .background(Color(NSColor.windowBackgroundColor))
         .onAppear {
             for key in apiKeys {
                 switch key.type {

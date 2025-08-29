@@ -12,6 +12,7 @@ struct XAIView: View {
     @Binding var message: String
     @Binding var trigger: UUID
     let parameters: XAIModelParameters
+    let onCompletion: () -> Void
     
     @State private var generatedImages: [NSImage] = []
     @State private var selectedImage: NSImage? = nil
@@ -26,7 +27,7 @@ struct XAIView: View {
             
             if localLoading {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
             } else if !generatedImages.isEmpty {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 20)], spacing: 20) {
@@ -95,7 +96,7 @@ struct XAIView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .frame(maxWidth: 300)
+        .frame(maxWidth: 400)
         .padding()
         .background(Color.purple.opacity(0.1))
         .cornerRadius(15)
@@ -123,7 +124,9 @@ struct XAIView: View {
                     LogManager.shared.log("error", "xAI: \(error.localizedDescription)")
                 }
                 localLoading = false
-                isLoading = false  // Approximate; last API sets it
+                
+                // Notify parent that generation is complete
+                onCompletion()
             }
         }
     }
@@ -180,53 +183,128 @@ struct XAIView: View {
     }
     
     func fetchImagesFromXAI(prompt: String, count: Int, apiKey: String) async throws -> [Data] {
-        let url = URL(string: "https://api.x.ai/v1/images/generations")!
+        let startTime = Date()
+        let requestId = UUID().uuidString.prefix(8)
+        
+        LogManager.shared.log("info", "[\(requestId)] xAI Image Generation Started")
+        LogManager.shared.log("info", "[\(requestId)] Model: \(parameters.modelName)")
+        LogManager.shared.log("info", "[\(requestId)] Count: \(count)")
+        LogManager.shared.log("info", "[\(requestId)] Format: \(parameters.responseFormat.rawValue)")
+        LogManager.shared.log("info", "[\(requestId)] Endpoint: \(parameters.imageGenerationEndpoint)")
+        LogManager.shared.log("info", "[\(requestId)] Prompt: \(prompt)")
+        
+        let url = URL(string: parameters.imageGenerationEndpoint)!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.timeoutInterval = 60
         
+        // xAI only supports these parameters according to documentation
         let body: [String: Any] = [
             "prompt": prompt,
             "model": parameters.modelName,
             "n": count,
-            "size": parameters.size.rawValue,
-            "quality": parameters.quality.rawValue,
-            "style": parameters.style.rawValue,
-            "response_format": "b64_json"
+            "response_format": parameters.responseFormat.rawValue
         ]
         
-        LogManager.shared.log("info", "xAI Image Generation - Model: \(parameters.modelName), Size: \(parameters.size.rawValue), Quality: \(parameters.quality.rawValue), Style: \(parameters.style.rawValue)")
+        LogManager.shared.log("info", "[\(requestId)] Request Body: \(body)")
         
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        } catch {
+            LogManager.shared.log("error", "[\(requestId)] Failed to serialize request body: \(error.localizedDescription)")
+            throw error
+        }
+        
+        LogManager.shared.log("info", "[\(requestId)] Sending request to xAI...")
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
+        let responseTime = Date().timeIntervalSince(startTime)
+        LogManager.shared.log("info", "[\(requestId)] Response received in \(String(format: "%.2f", responseTime))s")
+        
         guard let httpResponse = response as? HTTPURLResponse else {
-            LogManager.shared.log("error", "xAI API error: Invalid response type")
+            LogManager.shared.log("error", "[\(requestId)] Invalid response type: \(type(of: response))")
             throw URLError(.badServerResponse)
         }
+        
+        LogManager.shared.log("info", "[\(requestId)] HTTP Status: \(httpResponse.statusCode)")
+        LogManager.shared.log("info", "[\(requestId)] Response Headers: \(httpResponse.allHeaderFields)")
         
         guard (200...299).contains(httpResponse.statusCode) else {
-            LogManager.shared.log("error", "xAI API error: HTTP \(httpResponse.statusCode)")
+            let responseString = String(data: data, encoding: .utf8) ?? "Unable to decode response"
+            LogManager.shared.log("error", "[\(requestId)] HTTP \(httpResponse.statusCode) Error")
+            LogManager.shared.log("error", "[\(requestId)] Response Body: \(responseString)")
+            
+            // Try to parse error details
+            if let errorJson = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let error = errorJson["error"] as? [String: Any] {
+                if let message = error["message"] as? String {
+                    LogManager.shared.log("error", "[\(requestId)] xAI Error Message: \(message)")
+                }
+                if let type = error["type"] as? String {
+                    LogManager.shared.log("error", "[\(requestId)] xAI Error Type: \(type)")
+                }
+                if let code = error["code"] as? String {
+                    LogManager.shared.log("error", "[\(requestId)] xAI Error Code: \(code)")
+                }
+            }
+            
             throw URLError(.badServerResponse)
         }
         
-        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-        guard let imageDataArray = json?["data"] as? [[String: Any]] else {
+        LogManager.shared.log("info", "[\(requestId)] Successfully received response")
+        
+        let json: [String: Any]
+        do {
+            json = try JSONSerialization.jsonObject(with: data) as? [String: Any] ?? [:]
+        } catch {
+            LogManager.shared.log("error", "[\(requestId)] Failed to parse JSON response: \(error.localizedDescription)")
+            LogManager.shared.log("error", "[\(requestId)] Raw response: \(String(data: data, encoding: .utf8) ?? "Unable to decode")")
             throw URLError(.cannotParseResponse)
         }
         
-        var images: [Data] = []
-        for imageDict in imageDataArray {
-            guard let base64String = imageDict["b64_json"] as? String,
-                  let imageData = Data(base64Encoded: base64String) else {
-                throw URLError(.cannotParseResponse)
-            }
-            images.append(imageData)
+        LogManager.shared.log("info", "[\(requestId)] Response JSON keys: \(Array(json.keys))")
+        
+        guard let dataArray = json["data"] as? [[String: Any]] else {
+            LogManager.shared.log("error", "[\(requestId)] No 'data' array in response")
+            LogManager.shared.log("error", "[\(requestId)] Full response: \(json)")
+            throw URLError(.cannotParseResponse)
         }
         
-        return images
+        LogManager.shared.log("info", "[\(requestId)] Found \(dataArray.count) items in data array")
+        
+        var imagesData: [Data] = []
+        for (index, item) in dataArray.enumerated() {
+            LogManager.shared.log("info", "[\(requestId)] Processing item \(index + 1), keys: \(Array(item.keys))")
+            
+            if let b64String = item["b64_json"] as? String {
+                LogManager.shared.log("info", "[\(requestId)] Item \(index + 1) has base64 data (length: \(b64String.count))")
+                if let imageData = Data(base64Encoded: b64String) {
+                    imagesData.append(imageData)
+                    LogManager.shared.log("info", "[\(requestId)] Successfully decoded item \(index + 1) to \(imageData.count) bytes")
+                } else {
+                    LogManager.shared.log("error", "[\(requestId)] Failed to decode base64 data for item \(index + 1)")
+                }
+            } else if let urlString = item["url"] as? String {
+                LogManager.shared.log("info", "[\(requestId)] Item \(index + 1) has URL: \(urlString)")
+                // Note: We're not handling URLs in this implementation, only base64
+            } else {
+                LogManager.shared.log("warning", "[\(requestId)] Item \(index + 1) has neither b64_json nor url")
+            }
+        }
+        
+        if imagesData.isEmpty {
+            LogManager.shared.log("error", "[\(requestId)] No valid images found in response")
+            LogManager.shared.log("error", "[\(requestId)] Data array contents: \(dataArray)")
+            throw URLError(.cannotParseResponse)
+        }
+        
+        let totalTime = Date().timeIntervalSince(startTime)
+        LogManager.shared.log("info", "[\(requestId)] Successfully generated \(imagesData.count) images in \(String(format: "%.2f", totalTime))s")
+        LogManager.shared.log("info", "[\(requestId)] Total image data size: \(imagesData.reduce(0) { $0 + $1.count }) bytes")
+        
+        return imagesData
     }
 }

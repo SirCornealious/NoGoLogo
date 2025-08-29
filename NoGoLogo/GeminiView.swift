@@ -12,6 +12,7 @@ struct GeminiView: View {
     @Binding var message: String
     @Binding var trigger: UUID
     let parameters: GeminiModelParameters
+    let onCompletion: () -> Void
 
     
     @State private var generatedImages: [NSImage] = []
@@ -27,7 +28,7 @@ struct GeminiView: View {
             
             if localLoading {
                 ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
+                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
             } else if !generatedImages.isEmpty {
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 20)], spacing: 20) {
@@ -96,7 +97,7 @@ struct GeminiView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-        .frame(maxWidth: 300)
+        .frame(maxWidth: 400)
         .padding()
         .background(Color.green.opacity(0.1))
         .cornerRadius(15)
@@ -130,6 +131,9 @@ struct GeminiView: View {
                 await MainActor.run {
                     localLoading = false
                 }
+                
+                // Notify parent that generation is complete
+                onCompletion()
 
             }
         }
@@ -173,74 +177,8 @@ struct GeminiView: View {
     }
     
     func fetchImagesFromGemini(prompt: String, count: Int, apiKey: String) async throws -> [Data] {
-        var images: [Data] = []
-        for _ in 0..<count {  // Loop for multiple images
-            let url = URL(string: "https://generativelanguage.googleapis.com/v1beta/models/\(parameters.model.rawValue):generateContent")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.timeoutInterval = 60 // Add timeout for image generation
-            
-            request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            let body: [String: Any] = [
-                "contents": [
-                    [
-                        "parts": [
-                            ["text": "Create an image of \(prompt)"]
-                        ]
-                    ]
-                ],
-                "safetySettings": [
-                    [
-                        "category": "HARM_CATEGORY_HARASSMENT",
-                        "threshold": parameters.safetySettings.rawValue.uppercased()
-                    ],
-                    [
-                        "category": "HARM_CATEGORY_HATE_SPEECH",
-                        "threshold": parameters.safetySettings.rawValue.uppercased()
-                    ],
-                    [
-                        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                        "threshold": parameters.safetySettings.rawValue.uppercased()
-                    ],
-                    [
-                        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        "threshold": parameters.safetySettings.rawValue.uppercased()
-                    ]
-                ]
-            ]
-            
-            request.httpBody = try JSONSerialization.data(withJSONObject: body)
-            
-            let (data, response) = try await URLSession.shared.data(for: request)
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw URLError(.badServerResponse)
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                let errorMessage = "HTTP \(httpResponse.statusCode)"
-                LogManager.shared.log("error", "Gemini API error: \(errorMessage)")
-                throw URLError(.badServerResponse)
-            }
-            
-            let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
-            guard let candidates = json?["candidates"] as? [[String: Any]],
-                  let content = candidates.first?["content"] as? [String: Any],
-                  let parts = content["parts"] as? [[String: Any]],
-                  let inlineData = parts.first?["inlineData"] as? [String: String],
-                  let mimeType = inlineData["mimeType"],
-                  mimeType.hasPrefix("image/"),
-                  let base64String = inlineData["data"],
-                  let imageData = Data(base64Encoded: base64String) else {
-                LogManager.shared.log("error", "Failed to parse Gemini response")
-                throw URLError(.cannotParseResponse)
-            }
-            
-            images.append(imageData)
-        }
-        
-        return images
+        // Gemini doesn't support image generation - it's a text model only
+        LogManager.shared.log("error", "Gemini API: Image generation not supported - Gemini is a text-only model")
+        throw NSError(domain: "GeminiAPI", code: 0, userInfo: [NSLocalizedDescriptionKey: "Gemini doesn't support image generation. It's a text-only AI model. Please use xAI or OpenAI for image generation."])
     }
 }

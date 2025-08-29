@@ -5,74 +5,138 @@ struct DisclaimerSheet: View {
     @Binding var hasAgreed: Bool
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("⚠️ Disclaimer")
-                .font(.largeTitle)
-                .bold()
-                .foregroundColor(.orange)
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Please read and accept this disclaimer before proceeding.")
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    
-                    Text("""
-                    This application is provided as-is, with no warranty or guarantee of accuracy. By continuing, you agree that you understand and accept any risks, and that the developers are not liable for any consequences resulting from use of this application.
-                    
-                    The app will generate images using AI services and save them to your Photos library. Please ensure you have proper permissions and understand the terms of service for any AI services you use.
-                    
-                    If you do not agree, please close the application.
-                    """)
-                        .font(.body)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.leading)
-                }
-                .padding()
-            }
-            .frame(maxHeight: 300)
-            .background(Color(NSColor.windowBackgroundColor))
-            .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-            )
-
-            HStack(spacing: 20) {
+        VStack(spacing: 0) {
+            // Header with close button and centered title
+            HStack {
                 Button(action: {
-                    hasAgreed = true
-                }) {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                        Text("I Agree")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .font(.headline)
-                }
-                
-                Button(action: {
+                    hasAgreed = false
                     NSApp.terminate(nil)
                 }) {
-                    HStack {
-                        Image(systemName: "xmark.circle.fill")
-                        Text("Decline")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.red)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .font(.headline)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(.secondary)
+                        .frame(width: 20, height: 20)
+                        .background(Color.gray.opacity(0.2))
+                        .clipShape(Circle())
                 }
+                .buttonStyle(PlainButtonStyle())
+                
+                Spacer()
+                
+                Text("Disclaimer")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                // Invisible spacer to balance the close button
+                Color.clear
+                    .frame(width: 20, height: 20)
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            
+            Divider()
+                .padding(.vertical, 10)
+            
+            ScrollView {
+                VStack(spacing: 25) {
+                    // Warning Icon and Title
+                    VStack(spacing: 15) {
+                        Text("⚠️ Disclaimer")
+                            .font(.largeTitle)
+                            .foregroundColor(.orange)
+                        
+                        Text("Before using NoGoLogo, please read and understand the following:")
+                            .font(.headline)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    // Disclaimer Text
+                    VStack(alignment: .leading, spacing: 15) {
+                        Text("AI Image Generation:")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("• This app generates images using artificial intelligence")
+                            Text("• Generated content may not always be accurate or appropriate")
+                            Text("• You are responsible for the prompts you provide")
+                            Text("• Generated images should comply with applicable laws and guidelines")
+                        }
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        
+                        Text("API Usage:")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("• This app requires API keys from xAI, OpenAI, and/or Gemini")
+                            Text("• API usage may incur costs depending on your service plan")
+                            Text("• You are responsible for managing your own API keys and usage")
+                            Text("• API keys are stored locally and securely on your device")
+                        }
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                        
+                        Text("Privacy & Security:")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("• Your prompts and API keys are stored locally")
+                            Text("• No data is sent to our servers")
+                            Text("• Generated images are saved to your Photos library")
+                            Text("• Review each AI service's privacy policy for complete information")
+                        }
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    
+                    // Action Buttons
+                    HStack(spacing: 30) {
+                        Button(action: {
+                            hasAgreed = false
+                            NSApp.terminate(nil)
+                        }) {
+                            HStack {
+                                Image(systemName: "xmark.circle.fill")
+                                Text("Decline & Exit")
+                            }
+                            .font(.headline)
+                            .padding()
+                            .frame(minWidth: 150)
+                            .background(Color.red)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                        }
+                        
+                        Button(action: {
+                            hasAgreed = true
+                        }) {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                Text("I Agree & Continue")
+                            }
+                            .font(.headline)
+                            .padding()
+                            .frame(minWidth: 150)
+                            .background(Color.green)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.top, 10)
+                }
+                .padding(.vertical, 20)
+            }
         }
-        .padding(30)
-        .frame(minWidth: 600, minHeight: 500)
+        .frame(minWidth: 600, minHeight: 700)
         .background(Color(NSColor.windowBackgroundColor))
     }
 }
