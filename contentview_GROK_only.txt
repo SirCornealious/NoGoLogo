@@ -1,0 +1,335 @@
+import SwiftUI
+import CoreData
+import Photos
+import UniformTypeIdentifiers
+import CoreImage
+
+struct ContentView: View {
+    @State private var prompt = ""
+    @State private var message = "Enter a prompt and generate images."
+    @State private var isLoading = false
+    @State private var generatedImages: [NSImage] = []
+    @State private var numberOfImages = 1
+    @State private var showingSettings = false
+    @State private var selectedImage: NSImage? = nil
+    @Environment(\.managedObjectContext) private var viewContext
+    
+    @FetchRequest(
+        sortDescriptors: [],
+        animation: .default)
+    private var apiKeys: FetchedResults<APIKey>
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("NoGoLogo Image Generator")
+                .font(.system(size: 32, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+                .padding(.top, 30)
+            
+            TextField("Enter image prompt (e.g., 'A cat in a tree')", text: $prompt)
+                .font(.system(size: 16, design: .rounded))
+                .textFieldStyle(PlainTextFieldStyle())
+                .padding(16)
+                .background(Color.white.opacity(0.15))
+                .cornerRadius(20)
+                .foregroundColor(.white)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                )
+                .padding(.horizontal, 40)
+                .shadow(color: Color.purple.opacity(0.3), radius: 5, x: 0, y: 2)
+            
+            HStack {
+                Text("Number of images:")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundColor(.white.opacity(0.8))
+                Picker("", selection: $numberOfImages) {
+                    ForEach(1...10, id: \.self) { num in
+                        Text("\(num)").tag(num)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .frame(maxWidth: 200)
+                .accentColor(.purple)
+            }
+            .padding(.horizontal, 40)
+            
+            Button(action: {
+                generateAndSaveImages()
+            }) {
+                HStack {
+                    if isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                            .scaleEffect(0.8)
+                    }
+                    Text(isLoading ? "Generating..." : "Generate & Save Images")
+                }
+                .font(.system(size: 18, weight: .semibold, design: .rounded))
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(LinearGradient(gradient: Gradient(colors: [.purple, .blue]), startPoint: .leading, endPoint: .trailing))
+                .foregroundColor(.white)
+                .cornerRadius(20)
+                .shadow(color: Color.purple.opacity(0.5), radius: 10, x: 0, y: 5)
+            }
+            .disabled(isLoading || prompt.isEmpty || apiKeys.isEmpty)
+            .padding(.horizontal, 40)
+            .buttonStyle(PlainButtonStyle())
+            
+            HStack(spacing: 20) {
+                if !generatedImages.isEmpty {
+                    ScrollView {
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], spacing: 20) {
+                            ForEach(generatedImages.indices, id: \.self) { index in
+                                Image(nsImage: generatedImages[index])
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 150, maxHeight: 150)
+                                    .cornerRadius(15)
+                                    .shadow(color: .white.opacity(0.3), radius: 8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 15)
+                                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                                    )
+                                    .onTapGesture {
+                                        selectedImage = generatedImages[index]
+                                    }
+                                    .contextMenu {
+                                        ShareLink(item: Image(nsImage: generatedImages[index]), preview: SharePreview("Generated Image", image: Image(nsImage: generatedImages[index])))
+                                    }
+                                    .scaleEffect(1.0)
+                                    .animation(.easeInOut(duration: 0.2), value: UUID())
+                            }
+                        }
+                        .padding()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(20)
+                } else {
+                    Text("No images generated yet.")
+                        .font(.system(size: 16, design: .rounded))
+                        .foregroundColor(.white.opacity(0.6))
+                        .frame(maxWidth: .infinity)
+                }
+                
+                if let selectedImage = selectedImage {
+                    Image(nsImage: selectedImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .cornerRadius(20)
+                        .shadow(color: .purple.opacity(0.4), radius: 15)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color.purple.opacity(0.3), lineWidth: 2)
+                        )
+                        .contextMenu {
+                            ShareLink(item: Image(nsImage: selectedImage), preview: SharePreview("Generated Image", image: Image(nsImage: selectedImage)))
+                        }
+                        .transition(.scale)
+                } else {
+                    Text("Select an image to enlarge")
+                        .font(.system(size: 16, design: .rounded))
+                        .foregroundColor(.white.opacity(0.6))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color.white.opacity(0.05))
+                        .cornerRadius(20)
+                }
+            }
+            .frame(maxHeight: 400)
+            .padding(.horizontal, 40)
+            
+            Text(message)
+                .font(.system(size: 14, design: .rounded))
+                .foregroundColor(message.contains("Error") ? .red : .green)
+                .padding(.horizontal, 40)
+            
+            Spacer()
+            
+            Button(action: {
+                showingSettings = true
+            }) {
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 20))
+                    .foregroundColor(.white.opacity(0.8))
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.bottom, 20)
+        }
+        .background(
+            LinearGradient(gradient: Gradient(colors: [.indigo, .black]), startPoint: .top, endPoint: .bottom)
+                .edgesIgnoringSafeArea(.all)
+        )
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .environment(\.managedObjectContext, viewContext)
+                .presentationDetents([.medium])
+        }
+        .onAppear {
+            if apiKeys.isEmpty {
+                showingSettings = true
+                message = "Please enter your xAI API key in Settings."
+            }
+        }
+    }
+    
+    func generateAndSaveImages() {
+        guard !prompt.isEmpty else {
+            message = "Please enter a prompt."
+            return
+        }
+        
+        guard let apiKey = apiKeys.first?.key else {
+            message = "Please set your API key in Settings."
+            return
+        }
+        
+        isLoading = true
+        message = "Generating images..."
+        generatedImages.removeAll()
+        selectedImage = nil
+        
+        Task {
+            do {
+                // Generate images
+                let imagesData = try await fetchImagesFromXAI(prompt: prompt, count: numberOfImages, apiKey: apiKey)
+                
+                // Crop and convert to NSImage
+                var savedImages: [NSImage] = []
+                var croppedData: [Data] = []
+                for imageData in imagesData {
+                    var processedData = imageData
+                    if let cropped = cropBottomOfImage(imageData: processedData, pixelsToCrop: 40) {
+                        processedData = cropped
+                    }
+                    guard let nsImage = NSImage(data: processedData) else {
+                        throw URLError(.cannotDecodeContentData)
+                    }
+                    savedImages.append(nsImage)
+                    croppedData.append(processedData)
+                }
+                
+                // Save cropped images to Photos album
+                try await saveImagesToPhotosAlbum(imagesData: croppedData)
+                
+                // Update UI
+                DispatchQueue.main.async {
+                    generatedImages = savedImages
+                    message = "Images saved to Photos/NoGoLogo album!"
+                    isLoading = false
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    message = "Error: \(error.localizedDescription)"
+                    isLoading = false
+                }
+            }
+        }
+    }
+    
+    // Helper function to crop bottom pixels
+    func cropBottomOfImage(imageData: Data, pixelsToCrop: CGFloat) -> Data? {
+        guard let ciImage = CIImage(data: imageData) else { return nil }
+        let originalRect = ciImage.extent
+        let croppedRect = CGRect(x: 0, y: pixelsToCrop, width: originalRect.width, height: originalRect.height - pixelsToCrop)
+        let croppedImage = ciImage.cropped(to: croppedRect)
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(croppedImage, from: croppedImage.extent) else { return nil }
+        let nsImage = NSImage(cgImage: cgImage, size: NSSize(width: croppedRect.width, height: croppedRect.height))
+        guard let jpegData = nsImage.tiffRepresentation,
+              let bitmap = NSBitmapImageRep(data: jpegData) else { return nil }
+        return bitmap.representation(using: .jpeg, properties: [:])
+    }
+    
+    // Async helper for requesting photo authorization
+    func requestPhotoAuthorization() async throws {
+        let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        if status == .authorized {
+            return
+        } else if status == .notDetermined {
+            let newStatus = await PHPhotoLibrary.requestAuthorization(for: .addOnly)
+            if newStatus == .authorized {
+                return
+            }
+        }
+        throw NSError(domain: "PhotosAccessDenied", code: 0, userInfo: nil)
+    }
+    
+    func saveImagesToPhotosAlbum(imagesData: [Data]) async throws {
+        try await requestPhotoAuthorization()
+        
+        try await withCheckedThrowingContinuation { continuation in
+            PHPhotoLibrary.shared().performChanges {
+                let albumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: "NoGoLogo")
+                for imageData in imagesData {
+                    let assetRequest = PHAssetCreationRequest.forAsset()
+                    assetRequest.addResource(with: .photo, data: imageData, options: nil)
+                    albumRequest.addAssets([assetRequest.placeholderForCreatedAsset!] as NSArray)
+                }
+            } completionHandler: { success, error in
+                if success {
+                    continuation.resume()
+                } else if let error = error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(throwing: NSError(domain: "UnknownError", code: 0, userInfo: nil))
+                }
+            }
+        }
+    }
+    
+    func fetchImagesFromXAI(prompt: String, count: Int, apiKey: String) async throws -> [Data] {
+        let url = URL(string: "https://api.x.ai/v1/images/generations")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Set headers with API key
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Create request body
+        let body: [String: Any] = [
+            "prompt": prompt,
+            "model": "grok-2-image",
+            "n": count,
+            "response_format": "b64_json"
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        // Make the API request
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        // Check response status
+        guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        
+        // Parse the response
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let imageDataArray = json?["data"] as? [[String: Any]] else {
+            throw URLError(.cannotParseResponse)
+        }
+        
+        var images: [Data] = []
+        for imageDict in imageDataArray {
+            guard let base64String = imageDict["b64_json"] as? String,
+                  let imageData = Data(base64Encoded: base64String) else {
+                throw URLError(.cannotParseResponse)
+            }
+            images.append(imageData)
+        }
+        
+        return images
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}

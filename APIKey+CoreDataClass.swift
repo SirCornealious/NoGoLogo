@@ -1,0 +1,15 @@
+//
+//  APIKey+CoreDataClass.swift
+//  NoGoLogoUITests
+//
+//  Created by Jared Maxwell on 8/26/25.
+//
+//
+
+import Foundation
+import CoreData
+
+@objc(APIKey)
+public class APIKey: NSManagedObject {
+
+}

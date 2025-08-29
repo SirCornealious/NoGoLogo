@@ -1,0 +1,34 @@
+# Xcode
+.DS_Store
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+build/
+DerivedData/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Core Data
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Additional Xcode
+*.xcworkspace
+*.xcuserdata
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
